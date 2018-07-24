@@ -10,15 +10,25 @@
 
 	var pixelRatio = (function() {
 			var canvas = document.createElement('canvas'),
-					context = canvas.getContext('2d'),
-					backingStore = context.backingStorePixelRatio ||
-						context.webkitBackingStorePixelRatio ||
-						context.mozBackingStorePixelRatio ||
-						context.msBackingStorePixelRatio ||
-						context.oBackingStorePixelRatio ||
-						context.backingStorePixelRatio || 1;
+					context = canvas.getContext('2d');
 
-			return (window.devicePixelRatio || 1) / backingStore;
+	// polyfill 提供了这个方法用来获取设备的 pixel ratio
+    var getPixelRatio = function(context) {
+        var backingStore = context.backingStorePixelRatio ||
+            context.webkitBackingStorePixelRatio ||
+            context.mozBackingStorePixelRatio ||
+            context.msBackingStorePixelRatio ||
+            context.oBackingStorePixelRatio ||
+            context.backingStorePixelRatio || 1;
+    
+        return (window.devicePixelRatio || 1) / backingStore;
+    };
+ 
+    var ratio = getPixelRatio(ctx);
+    
+    // 注意，这里的 width 和 height 变成了 width * ratio 和 height * ratio
+    // ctx.drawImage(document.querySelector('img'), 0, 0, 300 * ratio, 90 * ratio);
+		
 		})(),
 
 		forEach = function(obj, func) {
